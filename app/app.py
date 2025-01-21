@@ -1,5 +1,6 @@
 import streamlit as st
 from gradio_client import Client
+import matplotlib.pyplot as plt
 
 # Initialize Gradio clients
 client = Client("duchaba/Friendly_Text_Moderation")
@@ -14,8 +15,22 @@ safer_threshold = st.slider("Select safer threshold", 0.0, 1.0, 0.02, 0.01)
 
 if st.button("Analyze Toxicity"):
     try:
+        # Call API
         result = client.predict(msg=user_input, safer=safer_threshold, api_name="/fetch_toxicity_level")
+        
+        # Display result
         st.success(f"Toxicity Score: {result}")
+        
+        # Plot the toxicity level using Matplotlib
+        fig, ax = plt.subplots()
+        ax.bar(["Toxicity"], [result], color=["red" if result > 0.5 else "green"])
+        ax.set_ylim(0, 1)
+        ax.set_ylabel("Toxicity Level")
+        ax.set_title("Toxicity Score Visualization")
+        
+        # Show the plot in Streamlit
+        st.pyplot(fig)
+
     except Exception as e:
         st.error(f"Error: {e}")
 
