@@ -61,9 +61,21 @@ st.subheader("Fetch Toxic Tweets")
 if st.button("Get Toxic Tweets"):
     try:
         toxic_tweets = client.predict(api_name="/fetch_toxic_tweets")
-        st.write("### Toxic Tweets:")
+
+        # Debug: Check the response format
+        st.write("Raw API Response:", toxic_tweets)
+
+        # Display tweets with HTML formatting
+        st.markdown("### **Toxic Tweets**", unsafe_allow_html=True)
+
         for idx, tweet in enumerate(toxic_tweets, 1):
-            st.write(f"{idx}. {tweet}")
+            formatted_tweet = f"""
+            <div style="background-color:#f8d7da; padding:10px; border-radius:5px; margin-bottom:10px;">
+                <strong>Tweet {idx}:</strong> {tweet}
+            </div>
+            """
+            st.markdown(formatted_tweet, unsafe_allow_html=True)
+
     except Exception as e:
         st.error(f"Error: {e}")
 
